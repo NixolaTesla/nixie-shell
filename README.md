@@ -5,8 +5,6 @@ A barebones shell made in C built for linux based operating systems
 
 Can currently execute the following commands:
 
--ls
--fastfetch
--neofetch
+ls, fastfetch, neofetch
 
 cd coming soon
