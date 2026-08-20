@@ -3,9 +3,13 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
+#include <pwd.h>
 
-char shell[50] = "[nixie~]$";
+char shell[50];
 char userinput[100];
+char dir[50];
+char usern[25];
+char cwd[1024];
 
 int main(int argc, char *argv[]){
 
@@ -13,17 +17,35 @@ int main(int argc, char *argv[]){
   char *pid_ff[] = {"fastfetch", NULL};
   char *pid_nf[] = {"neofetch", NULL};
   char *pid_clear[] = {"clear", NULL};
+  char *pid_pwd[] = {"pwd", NULL};
 
   printf("\nNIXIE SHELL V1\n");
   printf("NixolaTesla on GitHub\n\n");
+  printf("type 'help' for more information on the usage of nixieshell.\n");
 
 while(1){
-  printf("%s ", shell);
+
+  struct passwd *pw = getpwuid(getuid());
+
+if (pw != NULL && getcwd(cwd, sizeof(cwd)) != NULL) {
+    printf("%s:~%s$ ", pw->pw_name, cwd);
+}
+
   fgets(userinput, sizeof(userinput), stdin);
   userinput[strcspn(userinput, "\n")] = '\0';
 
   // USER INPUT TO SHELL (EXECVP)
   
+
+  // help
+  
+  
+  if(strcmp(userinput, "help") == 0){
+    printf("\ncommands: ls,cd,pwd,fastfetch,neofetch,exit,clear\n\n");
+    printf("to use cd, type cd and hit enter, you will then be prompted to input your desired directory.\n\n");
+    printf("(to return to the previous directory, just type in ..)\n\n");
+  }
+
   // ls
 
   if(strcmp(userinput, "ls") == 0){
@@ -84,13 +106,40 @@ while(1){
      }
    }
 
+
+
+   // pwd
+
+   if(strcmp(userinput, "pwd") == 0){
+      pid_t pid = fork();
+
+      if(pid == 0){
+	printf("\n");
+        execvp(pid_pwd[0], pid_pwd);
+	perror("EXECVP FAILED");
+    }
+
+      else{
+        waitpid(pid, NULL, 0);
+    }
+  }
+
+  // cat
+  
+    if(strcmp(userinput, "cat") == 0){
+       printf("coming soon! ;D"); 
+    }
+
   // cd
    
     if(strcmp(userinput, "cd") == 0){
-      pid_t pid = fork();
+      printf("INPUT DIR: ");
+      fgets(dir, sizeof(dir), stdin);
+      dir[strcspn(dir, "\n")] = '\0';
+      chdir(dir);
 
+      perror("cd");
   }
-
 
     // EXIT SHELL
 
