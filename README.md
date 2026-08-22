@@ -5,6 +5,6 @@ A barebones shell made in C built for linux based operating systems
 
 Can currently execute the following commands:
 
-ls, fastfetch, neofetch, clear, cd, pwd, help
+ls, fastfetch, neofetch, clear, cd, pwd, help command (specific to nixieshell), mkdir
 
-cat coming soon
+cat coming soon(?)
